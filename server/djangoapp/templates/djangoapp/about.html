@@ -14,12 +14,26 @@
     </head>
 
     <body>
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                      <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Home</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link" href="#">({{ user.username }})</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
         <div class="container">
             <div class="page-header">
                 <h1>About US</h1>      
             </div>
             <p>Welcome to Best Cars dealership, home to the best cars in North America. We sell domestic and imported cars at reasonable prices.</p>
-            <a href="{% url 'djangoapp:index' %}" class="link-primary">Go To Home</a>
         </div>
     </body>
 </html>
