@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: djangocapstone
     routes:
-      - route: $HOST.$DOMAIN
+      - route: pjoshi14.eu-gb.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: djangocapstone-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: pjoshi14.eu-gb.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
