@@ -127,6 +127,7 @@ def review(request):
     context = {}
     return render(request, 'djangoapp/add_review.html', context)
 
+
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
