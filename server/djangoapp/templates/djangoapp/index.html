@@ -45,7 +45,29 @@
         </nav>
 
         <!--Add a dealer table here -->
-
+        {% if dealership_list %}
+            <ul>
+            {% for dealer in dealership_list %}
+                <div class="container">
+                    <div class="row">
+                        <div>
+                            <h1 class="xlarge-font"><b>{{ dealer.full_name }}</b></h1>
+                            <p style="color:MediumSeaGreen;"><b>{{course.total_enrollment}} enrolled</b></p>
+                            <p> {{ dealer.address }}</p>
+                            <p> {{ dealer.state }}, {{ dealer.st}}</p>
+                            <form action="{% url 'djangoapp:dealer' dealer.id %}" method="post">
+                                {% csrf_token %}
+                                <input class="button"  type="submit"  value="View">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No Dealership are available to view.</p>
+        {% endif %}
     
         <!--Footer -->
         <footer>

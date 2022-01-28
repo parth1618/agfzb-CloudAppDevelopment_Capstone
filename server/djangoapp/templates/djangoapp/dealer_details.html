@@ -9,9 +9,59 @@
 
     <body>
 
-    <!--Add a nav bar here -->
+        <!--Add a nav bar here -->
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Home</a>
+                    <a class="navbar-brand" href="{% url 'djangoapp:about' %}">About Us</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li>
+                        <a class="btn btn-link" href="#">({{ user.username }})</a>
+                        <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Username" name="username" >
+                                <input type="password" class="form-control" placeholder="Password" name="psw" >
+                                <button class="btn btn-primary" type="submit">Login</button>
+                                <a class="btn btn-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
+                            </div>
+                        </form>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+        
+        <h2>Reviews:</h2>
 
-    <!-- Add reviews as cards -->
+        <!-- Add reviews as cards -->
+        {% if review_list %}
+            <div class="container-fluid">
+                <div class="card-columns-vertical">
+                    {% for review in course.review_list %}
+                        <div class="card mt-1">
+                            <div class="card-header"><h5>Review By: {{review.name}}</h5></div>
+                            <div class="card-body">{{review.review}}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'djangoapp:review' request.POST.dealerId %}" method="post">
+                        {% csrf_token %}
+                        <input class="button"  type="submit"  value="Post Review">
+                    </form>
+                {% else %}
+            </div>
+        {% else %}
+            <p>No Reviews are available to view for this dealer.</p>
+        {% endif %}
 
     </body>
 
