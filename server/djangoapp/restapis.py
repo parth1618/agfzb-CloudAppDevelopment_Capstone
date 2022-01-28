@@ -77,6 +77,25 @@ def get_dealer_by_state_from_cf(url, state):
     return results
 
 
+def get_dealer_by_id_from_cf(url, dealerId):
+    # Call get_request with a URL parameter
+    json_result = get_request(url, dealerId=dealerId)
+    if json_result:
+
+        # Here we can add further refinement to handle 404 and 500
+        if json_result["code"] != 200:
+            return results
+
+        dealer_doc = json_result["response"]
+        
+        # Create a CarDealer object with values in `doc` object
+        dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                short_name=dealer_doc["short_name"], state=dealer_doc["state"],
+                                st=dealer_doc["st"], zip=dealer_doc["zip"])
+    return dealer_obj
+
+
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
