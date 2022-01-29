@@ -146,7 +146,7 @@ def add_review(request, dealer_id):
     elif request.method == "POST":
         
         postData = {}
-        postData["id"] = uuid.uuid4().int
+        postData["id"] = 11
         postData["dealership"] = dealer_id
         postData["name"] = request.user.username
 
@@ -163,7 +163,7 @@ def add_review(request, dealer_id):
         
         postData["review"] = request.POST.get("content", "")
 
-        response = post_request(BASE_URL.format('review'), json.dumps(postData))
+        response = post_request(BASE_URL.format('review'), postData)
         return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
     else:
         pass
