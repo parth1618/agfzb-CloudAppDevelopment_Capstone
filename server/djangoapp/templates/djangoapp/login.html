@@ -14,11 +14,18 @@
 </head>
 
     <body>
-        {% if context %}
-            <script>
-                alert("{ context.loginError }}");
-            </script>
-        {% endif %}
+        <nav class="navbar navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{% url 'djangoapp:index' %}">Home</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a class="btn btn-link" href="{% url 'djangoapp:signup' %}">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
         
         <!-- Stylize Login form -->
         <form action="{% url 'djangoapp:login' %}" method="post">

@@ -1,8 +1,11 @@
 import requests
 import json
-from models import CarDealer, DealerReview
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
+from ibm_watson import NaturalLanguageUnderstandingV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+from ibm_watson.natural_language_understanding_v1 import Features, SentimentOptions
 
 # Create a `get_request` to make HTTP GET requests
 # e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
@@ -26,17 +29,18 @@ def get_request(url, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, payload, **kwargs):
-    print(kwargs)
     print("POST from {} ".format(url))
+    print(payload)
     try:
         # Call post method of requests library with URL and parameters
-        response = requests.post(url, params=kwargs, json=payload)
+        response = requests.post(url, json=payload)
     except:
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
     print("With status {} ".format(status_code))
     json_data = json.loads(response.text)
+    print("With data {} ".format(json_data))
     return json_data
 
 
@@ -58,11 +62,12 @@ def get_dealers_from_cf(url, **kwargs):
         # For each dealer object
         for dealer_doc in dealers:
             # Create a CarDealer object with values in `doc` object
-            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
-                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
-                                   short_name=dealer_doc["short_name"], state=dealer_doc["state"],
-                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
-            results.append(dealer_obj)
+            if dealer_doc:
+                dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                    id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                    short_name=dealer_doc["short_name"], state=dealer_doc["state"],
+                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
+                results.append(dealer_obj)
 
     return results
 
@@ -99,7 +104,7 @@ def get_dealer_by_id_from_cf(url, dealerId):
         if json_result["code"] != 200:
             return results
 
-        dealer_doc = json_result["response"]
+        dealer_doc = json_result["response"][0]
         
         # Create a CarDealer object with values in `doc` object
         dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
@@ -153,18 +158,12 @@ def analyze_review_sentiments(text):
 
         natural_language_understanding.set_service_url(URL)
 
-        response = natural_language_understanding.analyze(
-            text=text,
-            features=Features(sentiment=SentimentOptions(targets=[text]))).get_result()
+        response = natural_language_understanding.analyze(text=text, features=Features(sentiment=SentimentOptions(targets=[text]))).get_result()
 
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs, auth=HTTPBasicAuth('apikey', api_key))
-        
-        label = response['sentiment']['document']['label'] 
-
+        label = response['sentiment']['document']['label']
         return label
-    except:
+    except Exception as e:
         # If any error occurs
-        print("Network exception occurred")
+        print("Exception while finding sentiment: {0}".format(e))
 
 

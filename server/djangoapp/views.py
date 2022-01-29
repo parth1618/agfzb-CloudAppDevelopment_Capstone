@@ -151,14 +151,20 @@ def add_review(request, dealer_id):
         postData["name"] = request.user.username
 
         car = get_object_or_404(Course, pk=request.POST["car"]) if request.POST.get("car", None) else None
-        postData["car_make"] = str(car.carMake.name) if car else "NA"
-        postData["car_model"] = str(car.name) if car else "NA"
-        postData["car_year"] = car.year.strftime("%Y")
-        postData["purchase"] = request.POST.get("purchasecheck", False)
-        postData["purchase_date"] = request.POST.get("purchasedate", None)
+        if car:
+            postData["car_make"] = str(car.carMake.name) if car else "NA"
+            postData["car_model"] = str(car.name) if car else "NA"
+            postData["car_year"] = car.year.strftime("%Y") if car else "NA"
+        if request.POST.get("purchasecheck", None):
+            postData["purchase"] = request.POST.get("purchasecheck", False)
+        
+        if request.POST.get("purchasedate", None):
+            postData["purchase_date"] = request.POST.get("purchasedate", None)
+        
         postData["review"] = request.POST.get("content", "")
 
-        response = post_request(BASE_URL.format('review'), payload, )
+        response = post_request(BASE_URL.format('review'), json.dumps(postData))
+        return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
     else:
         pass
 
