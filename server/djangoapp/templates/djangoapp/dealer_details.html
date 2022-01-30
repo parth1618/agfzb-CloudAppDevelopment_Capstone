@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dealership Review</title>
-    {% load static %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <title>Dealership Review</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
     <body>
-
         <!--Add a nav bar here -->
         <nav class="navbar navbar-light bg-light">
             <div class="container-fluid">
@@ -41,9 +39,13 @@
         <h2>Reviews for {{dealer.full_name}}:</h2>
         <hr>
         {% if user.is_authenticated %}
-            <a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer.id %}">Add Review</a>
+            <div>
+                <a class="btn btn-link" href="{% url 'djangoapp:add_review' dealer.id %}">Add Review</a>
+            </div>
         {% else %}
-            <span class="label label-warning">Log In to add review.</span>
+            <div>
+                <span class="label label-warning">Log In to add review.</span>
+            </div>
         {% endif %}
 
         <!-- Add reviews as cards -->
@@ -69,9 +71,9 @@
                 </div>
             </div>
         {% else %}
-            <span class="label label-warning">No Reviews are available to view for this dealer.</span>
+            <div>
+                <span class="label label-warning">No Reviews are available to view for this dealer.</span>
+            </div>
         {% endif %}
-
     </body>
-
 </html>

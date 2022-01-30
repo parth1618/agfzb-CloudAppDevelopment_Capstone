@@ -130,7 +130,7 @@ def get_dealer_details(request, dealer_id):
 
 # Create a `add_review` view to submit a review
 def add_review(request, dealer_id):
-    import uuid
+    import random
     if request.method == "GET":
         context = {}
     
@@ -146,20 +146,21 @@ def add_review(request, dealer_id):
     elif request.method == "POST":
         
         postData = {}
-        postData["id"] = 11
+        postData["id"] = random.randint(10, 9999)
         postData["dealership"] = dealer_id
         postData["name"] = request.user.username
 
-        car = get_object_or_404(Course, pk=request.POST["car"]) if request.POST.get("car", None) else None
-        if car:
-            postData["car_make"] = str(car.carMake.name) if car else "NA"
-            postData["car_model"] = str(car.name) if car else "NA"
-            postData["car_year"] = car.year.strftime("%Y") if car else "NA"
         if request.POST.get("purchasecheck", None):
-            postData["purchase"] = request.POST.get("purchasecheck", False)
-        
-        if request.POST.get("purchasedate", None):
-            postData["purchase_date"] = request.POST.get("purchasedate", None)
+            postData["purchase"] = True if request.POST.get("purchasecheck", False) else False
+            
+            car = get_object_or_404(CarModel, pk=request.POST["car"]) if request.POST.get("car", None) else None
+            if car:
+                postData["car_make"] = str(car.carMake.name) if car else "NA"
+                postData["car_model"] = str(car.name) if car else "NA"
+                postData["car_year"] = car.year.strftime("%Y") if car else "NA"
+            
+            if request.POST.get("purchasedate", None):
+                postData["purchase_date"] = request.POST.get("purchasedate", None)
         
         postData["review"] = request.POST.get("content", "")
 
